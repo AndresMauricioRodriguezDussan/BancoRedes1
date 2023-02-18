@@ -5,9 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import model.Cuenta;
 
@@ -15,7 +13,7 @@ import model.Cuenta;
 
 public class BancoTCPServer {
 
-	public static final int PORT = 3401;
+	public static final int PORT = 3400;
 	
 	private ServerSocket listener;
 	private Socket serverSideSocket;
@@ -46,24 +44,29 @@ public class BancoTCPServer {
 		String[] control=message.split(",");
 		
 		System.out.println("[Server] From Client: " + message);
-		
 		switch(control[0]) {
 		
 		case "CREATE":
+			System.out.println("entro a create");
 			Cuenta cuenta = new Cuenta(control[1],control[2],Double.parseDouble(control[3]));
 			String nCuenta=generarNCuenta();
 			cuentas.put(nCuenta,cuenta);
 			answer="Su cuenta ha sido creada con exito, su numero de cuenta es: "+nCuenta;
+			break;
 			
 		case "CONSULT":
+			System.out.println("entro a consult");
 			for(String llave:cuentas.keySet()) {
+				System.out.println("si entro al for");
 				if(llave.equals(control[1])) {
 					answer="la cuenta"+llave+cuentas.get(llave).consultar();
 				}else {
 					answer="la cuenta ingresada no se encuentra registrada";
 				}
 			}
+			break;
 		case "DEPOSIT":
+			System.out.println("entro a deposit");
 			for(String llave:cuentas.keySet()) {
 				if(llave.equals(control[1])) {
 					cuentas.get(llave).depositar(Double.parseDouble(control[2]));
@@ -72,7 +75,9 @@ public class BancoTCPServer {
 					answer="la cuenta ingresada no se encuentra registrada";
 				}
 			}
+			break;
 		case "RETIRE":
+			System.out.println("entro a retire");
 			for(String llave:cuentas.keySet()) {
 				if(llave.equals(control[1])) {
 					if(cuentas.get(llave).getSaldo()>Double.parseDouble(control[2])) {
@@ -85,10 +90,11 @@ public class BancoTCPServer {
 					answer="la cuenta ingresada no se encuentra registrada";
 				}
 			}
+			break;
+		default:
+			answer="opcion invalida";
 		}
-		
-		
-		
+		System.out.println(answer);
 		toNetwork.println(answer);
 	}
 	
@@ -98,7 +104,7 @@ public class BancoTCPServer {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		BancoTCPClient es = new BancoTCPClient();
+		BancoTCPServer es = new BancoTCPServer();
 		es.init();
 	}
 	
