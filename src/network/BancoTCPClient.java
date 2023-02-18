@@ -90,7 +90,7 @@ public class BancoTCPClient {
 		case "1":
 			
 			//Este caso es para crear una cuenta
-			System.out.print("Para crear una cuenta digite los siguientes datos de esta manera:Nombre,identificacion,deposito inicial");
+			System.out.println("Para crear una cuenta digite los siguientes datos de esta manera:Nombre,identificacion,deposito inicial");
 			mensajeMenu = SCANNER.nextLine(); // Se lee el mensaje ingresado por el usuario
 			mensajeMenu = "CREATE," + mensajeMenu;  
 			
@@ -99,7 +99,7 @@ public class BancoTCPClient {
 		case "2":
 			
 			//Este caso es para consultar un valor en cuenta
-			System.out.print("Para consultar su saldo digite los siguientes datos de esta manera:Nro de cuenta");
+			System.out.println("Para consultar su saldo digite los siguientes datos de esta manera:Nro de cuenta");
 			mensajeMenu = SCANNER.nextLine(); // Se lee el mensaje ingresado por el usuario
 			mensajeMenu = "CONSULT," + mensajeMenu;
 			
@@ -107,7 +107,7 @@ public class BancoTCPClient {
 		case "3":
 			
 			//Este caso es para depositar dinero en cuenta
-			System.out.print("Para depositar digite los siguientes datos de esta manera:valor a depositar");
+			System.out.println("Para depositar digite los siguientes datos de esta manera:valor a depositar");
 			mensajeMenu = SCANNER.nextLine(); // Se lee el mensaje ingresado por el usuario
 			mensajeMenu = "DEPOSIT," + mensajeMenu;
 			
@@ -115,7 +115,7 @@ public class BancoTCPClient {
 		case "4":
 	
 			//Este caso es para retirar dinero en cuenta
-			System.out.print("Para retirar digite los siguientes datos de esta manera:valor a retirar");
+			System.out.println("Para retirar digite los siguientes datos de esta manera:valor a retirar");
 			mensajeMenu = SCANNER.nextLine(); // Se lee el mensaje ingresado por el usuario
 			mensajeMenu = "RETIRE," + mensajeMenu;
 			

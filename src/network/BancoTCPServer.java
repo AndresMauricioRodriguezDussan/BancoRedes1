@@ -47,7 +47,6 @@ public class BancoTCPServer {
 		switch(control[0]) {
 		
 		case "CREATE":
-			System.out.println("entro a create");
 			Cuenta cuenta = new Cuenta(control[1],control[2],Double.parseDouble(control[3]));
 			String nCuenta=generarNCuenta();
 			cuentas.put(nCuenta,cuenta);
@@ -55,7 +54,6 @@ public class BancoTCPServer {
 			break;
 			
 		case "CONSULT":
-			System.out.println("entro a consult");
 			for(String llave:cuentas.keySet()) {
 				System.out.println("si entro al for");
 				if(llave.equals(control[1])) {
@@ -66,7 +64,6 @@ public class BancoTCPServer {
 			}
 			break;
 		case "DEPOSIT":
-			System.out.println("entro a deposit");
 			for(String llave:cuentas.keySet()) {
 				if(llave.equals(control[1])) {
 					cuentas.get(llave).depositar(Double.parseDouble(control[2]));
@@ -77,7 +74,6 @@ public class BancoTCPServer {
 			}
 			break;
 		case "RETIRE":
-			System.out.println("entro a retire");
 			for(String llave:cuentas.keySet()) {
 				if(llave.equals(control[1])) {
 					if(cuentas.get(llave).getSaldo()>Double.parseDouble(control[2])) {
@@ -94,7 +90,6 @@ public class BancoTCPServer {
 		default:
 			answer="opcion invalida";
 		}
-		System.out.println(answer);
 		toNetwork.println(answer);
 	}
 	
