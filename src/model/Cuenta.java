@@ -3,12 +3,10 @@ package model;
 public class Cuenta {
 
 	private String nombreCliente;
-	private String cedula;
 	private double saldo;
 	
-	public Cuenta(String nombreCliente, String cedula, double saldo) {
+	public Cuenta(String nombreCliente, double saldo) {
 		this.nombreCliente = nombreCliente;
-		this.cedula = cedula;
 		this.saldo = saldo;
 	}
 
@@ -20,13 +18,6 @@ public class Cuenta {
 		this.nombreCliente = nombreCliente;
 	}
 
-	public String getCedula() {
-		return cedula;
-	}
-
-	public void setCedula(String cedula) {
-		this.cedula = cedula;
-	}
 
 	public double getSaldo() {
 		return saldo;

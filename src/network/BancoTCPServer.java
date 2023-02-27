@@ -39,58 +39,64 @@ public class BancoTCPServer {
 	}
 	
 	public void protocol(Socket socket) throws Exception{
-		String message = fromNetwork.readLine();
-		String answer="";
-		String[] control=message.split(",");
-		
-		System.out.println("[Server] From Client: " + message);
-		switch(control[0]) {
-		
-		case "CREATE":
-			Cuenta cuenta = new Cuenta(control[1],control[2],Double.parseDouble(control[3]));
-			String nCuenta=generarNCuenta();
-			cuentas.put(nCuenta,cuenta);
-			answer="Su cuenta ha sido creada con exito, su numero de cuenta es: "+nCuenta;
-			break;
+		while(true) {
+			String message = fromNetwork.readLine();
 			
-		case "CONSULT":
-			for(String llave:cuentas.keySet()) {
-				System.out.println("si entro al for");
-				if(llave.equals(control[1])) {
-					answer="la cuenta"+llave+cuentas.get(llave).consultar();
-				}else {
-					answer="la cuenta ingresada no se encuentra registrada";
-				}
+			if(message.isEmpty()) {
+				break;
 			}
-			break;
-		case "DEPOSIT":
-			for(String llave:cuentas.keySet()) {
-				if(llave.equals(control[1])) {
-					cuentas.get(llave).depositar(Double.parseDouble(control[2]));
-					answer="la cuenta: "+llave+" tiene un nuevo saldo de: "+cuentas.get(llave).getSaldo();
-				}else {
-					answer="la cuenta ingresada no se encuentra registrada";
+			
+			String answer="";
+			String[] control=message.split(",");
+			
+			System.out.println("[Server] From Client: " + message);
+			switch(control[0]) {
+			
+			case "CREATE":
+				Cuenta cuenta = new Cuenta(control[1],Double.parseDouble(control[3]));
+				String nCuenta=control[2];
+				cuentas.put(nCuenta,cuenta);
+				answer="Su cuenta ha sido creada con exito, su numero de cuenta es: "+nCuenta;
+				break;
+				
+			case "CONSULT":
+				for(String llave:cuentas.keySet()) {
+					if(llave.equals(control[1])) {
+						answer="la cuenta"+llave+cuentas.get(llave).consultar();
+					}else {
+						answer="la cuenta ingresada no se encuentra registrada";
+					}
 				}
-			}
-			break;
-		case "RETIRE":
-			for(String llave:cuentas.keySet()) {
-				if(llave.equals(control[1])) {
-					if(cuentas.get(llave).getSaldo()>Double.parseDouble(control[2])) {
-						cuentas.get(llave).retirar(Double.parseDouble(control[2]));
+				break;
+			case "DEPOSIT":
+				for(String llave:cuentas.keySet()) {
+					if(llave.equals(control[1])) {
+						cuentas.get(llave).depositar(Double.parseDouble(control[2]));
 						answer="la cuenta: "+llave+" tiene un nuevo saldo de: "+cuentas.get(llave).getSaldo();
 					}else {
-						answer="saldo insuficiente para realizar el retiro";
+						answer="la cuenta ingresada no se encuentra registrada";
 					}
-				}else {
-					answer="la cuenta ingresada no se encuentra registrada";
 				}
+				break;
+			case "RETIRE":
+				for(String llave:cuentas.keySet()) {
+					if(llave.equals(control[1])) {
+						if(cuentas.get(llave).getSaldo()>Double.parseDouble(control[2])) {
+							cuentas.get(llave).retirar(Double.parseDouble(control[2]));
+							answer="la cuenta: "+llave+" tiene un nuevo saldo de: "+cuentas.get(llave).getSaldo();
+						}else {
+							answer="saldo insuficiente para realizar el retiro";
+						}
+					}else {
+						answer="la cuenta ingresada no se encuentra registrada";
+					}
+				}
+				break;
+			default:
+				answer="opcion invalida";
 			}
-			break;
-		default:
-			answer="opcion invalida";
+			toNetwork.println(answer);
 		}
-		toNetwork.println(answer);
 	}
 	
 	private void createStreams(Socket socket) throws Exception{
@@ -103,24 +109,5 @@ public class BancoTCPServer {
 		es.init();
 	}
 	
-	public String generarNCuenta() {
-		Long numero;
-		String salida;
-		do {
-			numero = (long) (Math.random() * 9_000_000_000_000_000_0L) + 1_000_000_000_000_000_0L;
-			salida=Long.toString(numero);
-		}
-		while(!isDisponible(salida));
-		return salida;
-	}
-	
-	public boolean isDisponible(String nCuenta) {
-		for(String llave:cuentas.keySet()) {
-			if(llave.equals(nCuenta)) {
-				return false;
-			}
-		}
-		return true;
-	}
 }
 
